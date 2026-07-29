@@ -26,9 +26,21 @@ if [ -n "${POSTHOG_GIT_SIGNING_KEY:-}" ] && [ "$(git config --global --get commi
   echo "coder-dotfiles: reapplied git signing config (template bootstrap had not)"
 fi
 
-# --- Clone the PostHog repo landscape (see clone-repos.sh) ---
-# Backgrounded so workspace start isn't blocked by ~15 clones.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-nohup bash "$SCRIPT_DIR/clone-repos.sh" >> "$HOME/.coder-dotfiles-clone.log" 2>&1 &
 
-echo "coder-dotfiles: install.sh done (repo clones continue in background, see ~/.coder-dotfiles-clone.log)"
+# --- Claude Code personal config ---
+# Both steps are fast and offline, and must land before the backgrounded plugin
+# install: that also rewrites settings.json, and interleaving two read-modify-write
+# passes over the same file can drop whichever key was written first.
+python3 "$SCRIPT_DIR/claude-settings.py" || echo "coder-dotfiles: claude settings merge FAILED"
+
+mkdir -p ~/.claude/skills
+cp -R "$SCRIPT_DIR/claude/skills/." ~/.claude/skills/ \
+  || echo "coder-dotfiles: claude skills copy FAILED"
+
+# --- Background work ---
+# Neither blocks workspace start: ~5 repo clones, and a marketplace clone plus 3 plugin installs.
+nohup bash "$SCRIPT_DIR/clone-repos.sh" >> "$HOME/.coder-dotfiles-clone.log" 2>&1 &
+nohup bash "$SCRIPT_DIR/install-claude-plugins.sh" >> "$HOME/.coder-dotfiles-plugins.log" 2>&1 &
+
+echo "coder-dotfiles: install.sh done (repo clones -> ~/.coder-dotfiles-clone.log, claude plugins -> ~/.coder-dotfiles-plugins.log)"
