@@ -17,9 +17,10 @@ hogli devbox:setup --configure-dotfiles
 - Reapplies git commit-signing config from the `POSTHOG_GIT_SIGNING_KEY` secret if the template's boot-time bootstrap raced and left the box unconfigured
 - Merges an `env` block into `~/.claude/settings.json` (`claude-settings.py`) — LLM Analytics session capture and the PostHog MCP exec allow-list
 - Installs `~/.claude/skills/` from `claude/skills/` — currently the `phs` skills-store bridge
+- Installs the user-level agent skills from `mattpocock/skills` and `find-skills` from `vercel-labs/skills` into `~/.claude/skills` (`install-agent-skills.sh`, backgrounded, non-interactive via `npx skills add -g -a claude-code -s '*' -y`). Skipped once installed; refresh with `npx skills update -g -y`
 - Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
 
-Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, and `~/.coder-dotfiles-phrocs.log`.
+Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, and `~/.coder-dotfiles-skills.log`.
 
 ## Still manual on a new box
 
