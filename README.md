@@ -24,7 +24,7 @@ Logs: `~/.coder-dotfiles-clone.log` and `~/.coder-dotfiles-plugins.log`.
 - **MCP OAuth.** After the plugins install, `claude mcp list` shows `! Needs authentication` — the posthog and slack servers use OAuth. Auth via `/mcp`, or copy the `mcpOAuth` block of `~/.claude/.credentials.json` from a box that is already authed (that block only; account refresh tokens rotate, so sharing `claudeAiOauth` invalidates the other boxes).
 - **Claude Code login.** If the `CLAUDE_CODE_OAUTH_TOKEN` secret has gone stale, a fresh box 401s even though the env var is set. `/login` once on the box, or refresh the secret with `claude setup-token` + `hogli devbox:setup --configure-claude`.
 
-See `/phs andy-devbox` for the full bring-up checklist.
+See `/phs alex-lebedev-devbox` for the full bring-up checklist.
 
 ## Rules
 
