@@ -10,6 +10,8 @@ if ! grep -q '# >>> coder-dotfiles >>>' ~/.bash_aliases 2>/dev/null; then
 alias gcm='git checkout master'
 alias gcmm='git checkout main'
 alias gpp='git pull'
+# Re-select the slim stack after `hogli nuke` resets it.
+alias slim='bash ~/.config/coderv2/dotfiles/posthog-slim-stack.sh'
 # Ghostty's TERM has no terminfo on the box, which breaks clear/less/vim.
 [ "$TERM" = xterm-ghostty ] && export TERM=xterm-256color
 # <<< coder-dotfiles <<<
@@ -41,8 +43,9 @@ cp -R "$SCRIPT_DIR/claude/skills/." ~/.claude/skills/ \
   || echo "coder-dotfiles: claude skills copy FAILED"
 
 # --- Background work ---
-# Neither blocks workspace start: ~5 repo clones, and a marketplace clone plus 3 plugin installs.
+# None block workspace start: ~5 repo clones, a marketplace clone plus 3 plugin installs, and the slim stack selection.
 nohup bash "$SCRIPT_DIR/clone-repos.sh" >> "$HOME/.coder-dotfiles-clone.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/install-claude-plugins.sh" >> "$HOME/.coder-dotfiles-plugins.log" 2>&1 &
+nohup bash "$SCRIPT_DIR/posthog-slim-stack.sh" >> "$HOME/.coder-dotfiles-slim-stack.log" 2>&1 &
 
-echo "coder-dotfiles: install.sh done (repo clones -> ~/.coder-dotfiles-clone.log, claude plugins -> ~/.coder-dotfiles-plugins.log)"
+echo "coder-dotfiles: install.sh done (repo clones -> ~/.coder-dotfiles-clone.log, claude plugins -> ~/.coder-dotfiles-plugins.log, slim stack -> ~/.coder-dotfiles-slim-stack.log)"
