@@ -14,3 +14,10 @@ wait_for() {
     waited=$((waited + 5))
   done
 }
+
+# True once the template has pulled ~/posthog to master: no pull in flight, and a file the
+# July AMI snapshot predates is present.
+checkout_ready() {
+  local dir="${POSTHOG_DIR:-$HOME/posthog}"
+  [ ! -e "$dir/.git/index.lock" ] && grep -q "^    desktop:" "$dir/devenv/intent-map.yaml" 2>/dev/null
+}

@@ -12,13 +12,14 @@ hogli devbox:setup --configure-dotfiles
 
 - Clones the PostHog repo landscape (`clone-repos.sh`, backgrounded, shallow, idempotent)
 - Adds shell aliases (`gcm`, `gcmm`, `gpp`, `slim`) via a managed block in `~/.bash_aliases`
+- Refreshes phrocs from the `phrocs-latest` release into `tools/phrocs/dist` (`install-phrocs.sh`, backgrounded). The image bakes a stale build that fails `hogli start` units with a bash syntax error, and hogli never checks the version. Wait for `~/.coder-dotfiles-phrocs.log` to say `refreshed` before the first `hogli start`
 - Selects the slim hogli dev stack for signals and reviewhog work (`posthog-slim-stack.sh`, backgrounded). `hogli nuke` resets the selection; run `slim` to re-apply
 - Reapplies git commit-signing config from the `POSTHOG_GIT_SIGNING_KEY` secret if the template's boot-time bootstrap raced and left the box unconfigured
 - Merges an `env` block into `~/.claude/settings.json` (`claude-settings.py`) — LLM Analytics session capture and the PostHog MCP exec allow-list
 - Installs `~/.claude/skills/` from `claude/skills/` — currently the `phs` skills-store bridge
 - Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
 
-Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, and `~/.coder-dotfiles-slim-stack.log`.
+Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, and `~/.coder-dotfiles-phrocs.log`.
 
 ## Still manual on a new box
 
