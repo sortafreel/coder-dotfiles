@@ -4,6 +4,9 @@
 # Idempotent: every step is guarded, so a re-run on workspace start is a no-op.
 set -uo pipefail
 
+# Coder runs dotfiles before the template puts ~/.local/bin (where claude lives) on PATH.
+export PATH="$HOME/.local/bin:$PATH"
+
 MARKETPLACE=claude-plugins-official
 
 if ! claude plugin marketplace list 2>/dev/null | grep -q "$MARKETPLACE"; then

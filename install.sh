@@ -10,6 +10,8 @@ if ! grep -q '# >>> coder-dotfiles >>>' ~/.bash_aliases 2>/dev/null; then
 alias gcm='git checkout master'
 alias gcmm='git checkout main'
 alias gpp='git pull'
+# Ghostty's TERM has no terminfo on the box, which breaks clear/less/vim.
+[ "$TERM" = xterm-ghostty ] && export TERM=xterm-256color
 # <<< coder-dotfiles <<<
 EOF
 fi
