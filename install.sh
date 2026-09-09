@@ -30,6 +30,15 @@ if [ -n "${POSTHOG_GIT_SIGNING_KEY:-}" ] && [ "$(git config --global --get commi
   echo "coder-dotfiles: reapplied git signing config (template bootstrap had not)"
 fi
 
+# --- git credentials over HTTPS ---
+# The box ships gh logged in via the GH_TOKEN secret, but git has no credential helper,
+# so an HTTPS push hangs on a username prompt. Point git at gh. Idempotent.
+if gh auth status >/dev/null 2>&1; then
+  gh auth setup-git || echo "coder-dotfiles: gh auth setup-git FAILED"
+else
+  echo "coder-dotfiles: gh not logged in (GH_TOKEN secret missing?), skipping git credential helper"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Claude Code personal config ---
