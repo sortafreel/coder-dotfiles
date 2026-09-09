@@ -33,3 +33,4 @@ See `/phs alex-lebedev-devbox` for the full bring-up checklist.
 - No secrets in this repo (it may be public); secrets go in `hogli devbox:secret:set`. The `POSTHOG_API_KEY` in `claude-settings.py` is a public write-only ingest key, not a secret
 - Don't duplicate what the platform already handles: git identity, Claude token, gh auth
 - Anything slow or network-bound gets backgrounded from `install.sh` so workspace start isn't blocked
+- Coder runs dotfiles before the template's bootstrap finishes (claude install, `~/posthog` pull). Background scripts poll for their prerequisite via `wait-for.sh` instead of assuming it exists

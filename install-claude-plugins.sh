@@ -4,8 +4,9 @@
 # Idempotent: every step is guarded, so a re-run on workspace start is a no-op.
 set -uo pipefail
 
-# Coder runs dotfiles before the template puts ~/.local/bin (where claude lives) on PATH.
 export PATH="$HOME/.local/bin:$PATH"
+source "$(dirname "${BASH_SOURCE[0]}")/wait-for.sh"
+wait_for "claude binary (template installs it after dotfiles start)" 600 test -x "$HOME/.local/bin/claude" || exit 0
 
 MARKETPLACE=claude-plugins-official
 
