@@ -52,12 +52,13 @@ cp -R "$SCRIPT_DIR/claude/skills/." ~/.claude/skills/ \
   || echo "coder-dotfiles: claude skills copy FAILED"
 
 # --- Background work ---
-# None block workspace start: ~5 repo clones, a marketplace clone plus 3 plugin installs, the slim stack selection, a phrocs refresh, the agent skills install, and the bubblewrap apt install.
+# None block workspace start: ~5 repo clones, a marketplace clone plus 3 plugin installs, the slim stack selection, a phrocs refresh, the agent skills install, the bubblewrap apt install, and the Codex CLI install + login.
 nohup bash "$SCRIPT_DIR/clone-repos.sh" >> "$HOME/.coder-dotfiles-clone.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/install-claude-plugins.sh" >> "$HOME/.coder-dotfiles-plugins.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/posthog-slim-stack.sh" >> "$HOME/.coder-dotfiles-slim-stack.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/install-phrocs.sh" >> "$HOME/.coder-dotfiles-phrocs.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/install-agent-skills.sh" >> "$HOME/.coder-dotfiles-skills.log" 2>&1 &
 nohup bash "$SCRIPT_DIR/install-bubblewrap.sh" >> "$HOME/.coder-dotfiles-bubblewrap.log" 2>&1 &
+nohup bash "$SCRIPT_DIR/install-codex.sh" >> "$HOME/.coder-dotfiles-codex.log" 2>&1 &
 
-echo "coder-dotfiles: install.sh done (repo clones -> ~/.coder-dotfiles-clone.log, claude plugins -> ~/.coder-dotfiles-plugins.log, slim stack -> ~/.coder-dotfiles-slim-stack.log, phrocs -> ~/.coder-dotfiles-phrocs.log, skills -> ~/.coder-dotfiles-skills.log, bubblewrap -> ~/.coder-dotfiles-bubblewrap.log)"
+echo "coder-dotfiles: install.sh done (repo clones -> ~/.coder-dotfiles-clone.log, claude plugins -> ~/.coder-dotfiles-plugins.log, slim stack -> ~/.coder-dotfiles-slim-stack.log, phrocs -> ~/.coder-dotfiles-phrocs.log, skills -> ~/.coder-dotfiles-skills.log, bubblewrap -> ~/.coder-dotfiles-bubblewrap.log, codex -> ~/.coder-dotfiles-codex.log)"

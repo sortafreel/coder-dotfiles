@@ -20,11 +20,14 @@ hogli devbox:setup --configure-dotfiles
 - Installs `~/.claude/skills/` from `claude/skills/` — currently the `phs` skills-store bridge
 - Installs the user-level agent skills from `mattpocock/skills` and `find-skills` from `vercel-labs/skills` into `~/.claude/skills` (`install-agent-skills.sh`, backgrounded, non-interactive via `npx skills add -g -a claude-code -s '*' -y`). Skipped once installed; refresh with `npx skills update -g -y`
 - Installs bubblewrap and activates its AppArmor profile (`install-bubblewrap.sh`, backgrounded, needs passwordless sudo). Codex CLI sandboxes commands with it, and the Ubuntu 24.04 image ships neither the package nor an active profile. Skipped once `bwrap --dev-bind / / true` passes
+- Installs Codex CLI, logs it in with the `OPENAI_API_KEY` secret, and registers the PostHog MCP server in `~/.codex/config.toml` (`install-codex.sh`, backgrounded). The config block is written directly because `codex mcp add` starts the browser OAuth flow at once and blocks
 - Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
 
-Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, and `~/.coder-dotfiles-bubblewrap.log`.
+Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, `~/.coder-dotfiles-bubblewrap.log`, and `~/.coder-dotfiles-codex.log`.
 
 ## Still manual on a new box
+
+- **Codex MCP OAuth.** `codex mcp login posthog` waits for a browser callback on a `127.0.0.1:<port>` the box picks per attempt. Read the port from the `redirect_uri` in the printed link, then on the laptop run `ssh -N -o ExitOnForwardFailure=yes -L 127.0.0.1:<port>:127.0.0.1:<port> coder.devbox-alexl-<box>`, open the link, finish the sign-in, then Ctrl+C the tunnel. Do not use `hogli devbox:forward` (it always forwards 8010) and do not paste the full link anywhere (it carries a one-time code). Tokens cannot be copied between boxes: PostHog rotates refresh tokens, so two boxes sharing one set break each other.
 
 - **MCP OAuth.** After the plugins install, `claude mcp list` shows `! Needs authentication` — the posthog and slack servers use OAuth. Auth via `/mcp`, or copy the `mcpOAuth` block of `~/.claude/.credentials.json` from a box that is already authed (that block only; account refresh tokens rotate, so sharing `claudeAiOauth` invalidates the other boxes).
 - **Claude Code login.** If the `CLAUDE_CODE_OAUTH_TOKEN` secret has gone stale, a fresh box 401s even though the env var is set. `/login` once on the box, or refresh the secret with `claude setup-token` + `hogli devbox:setup --configure-claude`.
