@@ -19,9 +19,10 @@ hogli devbox:setup --configure-dotfiles
 - Merges an `env` block into `~/.claude/settings.json` (`claude-settings.py`) — LLM Analytics session capture and the PostHog MCP exec allow-list
 - Installs `~/.claude/skills/` from `claude/skills/` — currently the `phs` skills-store bridge
 - Installs the user-level agent skills from `mattpocock/skills` and `find-skills` from `vercel-labs/skills` into `~/.claude/skills` (`install-agent-skills.sh`, backgrounded, non-interactive via `npx skills add -g -a claude-code -s '*' -y`). Skipped once installed; refresh with `npx skills update -g -y`
+- Installs bubblewrap and activates its AppArmor profile (`install-bubblewrap.sh`, backgrounded, needs passwordless sudo). Codex CLI sandboxes commands with it, and the Ubuntu 24.04 image ships neither the package nor an active profile. Skipped once `bwrap --dev-bind / / true` passes
 - Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
 
-Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, and `~/.coder-dotfiles-skills.log`.
+Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, and `~/.coder-dotfiles-bubblewrap.log`.
 
 ## Still manual on a new box
 
