@@ -39,6 +39,18 @@ else
   echo "coder-dotfiles: gh not logged in (GH_TOKEN secret missing?), skipping git credential helper"
 fi
 
+# --- Metabase cookie ---
+# `hogli metabase:*` reads the plain cookie header from this file and never opens a browser,
+# so the METABASE_COOKIE_US secret (set from the laptop after `hogli metabase:login`) is enough.
+if [ -n "${METABASE_COOKIE_US:-}" ]; then
+  mkdir -p ~/.config/posthog/metabase
+  ( umask 077 && printf '%s' "$METABASE_COOKIE_US" > ~/.config/posthog/metabase/cookie-us.new ) \
+    && mv -f ~/.config/posthog/metabase/cookie-us.new ~/.config/posthog/metabase/cookie-us \
+    || echo "coder-dotfiles: metabase cookie write FAILED"
+else
+  echo "coder-dotfiles: METABASE_COOKIE_US secret missing, hogli metabase:* will need a copied cookie"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Claude Code personal config ---
