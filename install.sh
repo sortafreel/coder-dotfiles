@@ -18,6 +18,17 @@ alias slim='bash ~/.config/coderv2/dotfiles/posthog-slim-stack.sh'
 EOF
 fi
 
+# --- tmux (managed block) ---
+# Agents run inside tmux to survive a laptop sleep; the defaults have no mouse scrolling and a 2000-line scrollback.
+if ! grep -q '# >>> coder-dotfiles >>>' ~/.tmux.conf 2>/dev/null; then
+  cat >> ~/.tmux.conf << 'EOF'
+# >>> coder-dotfiles >>>
+set -g mouse on
+set -g history-limit 50000
+# <<< coder-dotfiles <<<
+EOF
+fi
+
 # --- Commit signing safety net ---
 # The posthog-linux template configures signing from the POSTHOG_GIT_SIGNING_KEY
 # secret at boot, but its bootstrap can race ("Bootstrap did not complete before

@@ -12,6 +12,7 @@ hogli devbox:setup --configure-dotfiles
 
 - Clones the PostHog repo landscape (`clone-repos.sh`, backgrounded, shallow, idempotent)
 - Adds shell aliases (`gcm`, `gcmm`, `gpp`, `slim`) via a managed block in `~/.bash_aliases`
+- Adds `mouse on` and a 50000-line scrollback to `~/.tmux.conf` via a managed block, for agents that run inside tmux
 - Refreshes phrocs from the `phrocs-latest` release into `tools/phrocs/dist` (`install-phrocs.sh`, backgrounded). The image bakes a stale build that fails `hogli start` units with a bash syntax error, and hogli never checks the version. Wait for `~/.coder-dotfiles-phrocs.log` to say `refreshed` before the first `hogli start`
 - Selects the slim hogli dev stack for signals and reviewhog work (`posthog-slim-stack.sh`, backgrounded). `hogli nuke` resets the selection; run `slim` to re-apply
 - Writes the Metabase session cookie from the `METABASE_COOKIE_US` secret to `~/.config/posthog/metabase/cookie-us` (mode 600), so `hogli metabase:*` works on the box. Refresh the secret after each local `hogli metabase:login --region us`; a running box needs a restart or an `scp` of the file
