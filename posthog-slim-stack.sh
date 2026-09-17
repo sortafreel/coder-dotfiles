@@ -13,6 +13,7 @@ wait_for "posthog checkout pull" 900 checkout_ready || exit 0
 cd "$POSTHOG_DIR"
 "$HOGLI" dev:apply desktop mcp \
     --include embedding-worker \
+    --include capture-ai \
     --exclude desktop \
     --exclude agent-proxy \
     --exclude capture \

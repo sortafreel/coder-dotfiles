@@ -14,7 +14,10 @@ hogli devbox:setup --configure-dotfiles
 - Adds shell aliases (`gcm`, `gcmm`, `gpp`, `slim`) via a managed block in `~/.bash_aliases`
 - Adds `mouse on` and a 50000-line scrollback to `~/.tmux.conf` via a managed block, for agents that run inside tmux
 - Refreshes phrocs from the `phrocs-latest` release into `tools/phrocs/dist` (`install-phrocs.sh`, backgrounded). The image bakes a stale build that fails `hogli start` units with a bash syntax error, and hogli never checks the version. Wait for `~/.coder-dotfiles-phrocs.log` to say `refreshed` before the first `hogli start`
-- Selects the slim hogli dev stack for signals and reviewhog work (`posthog-slim-stack.sh`, backgrounded). `hogli nuke` resets the selection; run `slim` to re-apply
+- Selects the slim hogli dev stack for signals and reviewhog work, including `capture-ai` for LLM cost events (`posthog-slim-stack.sh`, backgrounded). `hogli nuke` resets the selection; run `slim` to re-apply
+- Installs ngrok and writes the three-tunnel config for ReviewHog experiments (`install-ngrok.sh`, backgrounded): `django` 8010, `gateway` 3308, `mcp` 8787 on the same reserved domains as the laptop, so one machine runs them at a time. Token from the `NGROK_AUTHTOKEN` secret. Alias `tunnels` starts them; run it before `hogli start`
+- Writes the experiment settings into `~/posthog/.env` in place: `SANDBOX_PROVIDER=MODAL_DOCKER`, the three `SANDBOX_*_URL` tunnel URLs, and the gateway's local AI capture lane. The Modal and GitHub App credentials come from secrets
+- `seed-github-app` creates the GitHub App installation row for team 1 in the box database (needs the stack up and the `GITHUB_APP_*` secrets). Run once per fresh database, so again after `hogli nuke`
 - Writes the Metabase session cookie from the `METABASE_COOKIE_US` secret to `~/.config/posthog/metabase/cookie-us` (mode 600), so `hogli metabase:*` works on the box. Refresh the secret after each local `hogli metabase:login --region us`; a running box needs a restart or an `scp` of the file
 - Points git at `gh` for HTTPS credentials (`gh auth setup-git`), so pushes do not hang on a username prompt. Needs the `GH_TOKEN` secret
 - Reapplies git commit-signing config from the `POSTHOG_GIT_SIGNING_KEY` secret if the template's boot-time bootstrap raced and left the box unconfigured
@@ -25,7 +28,7 @@ hogli devbox:setup --configure-dotfiles
 - Installs Codex CLI, logs it in with the `OPENAI_API_KEY` secret, and registers the PostHog MCP server in `~/.codex/config.toml` (`install-codex.sh`, backgrounded). The config block is written directly because `codex mcp add` starts the browser OAuth flow at once and blocks
 - Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
 
-Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, `~/.coder-dotfiles-bubblewrap.log`, and `~/.coder-dotfiles-codex.log`.
+Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, `~/.coder-dotfiles-bubblewrap.log`, `~/.coder-dotfiles-codex.log`, and `~/.coder-dotfiles-ngrok.log`.
 
 ## Still manual on a new box
 
