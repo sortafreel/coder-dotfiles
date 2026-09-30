@@ -19,6 +19,7 @@ hogli devbox:setup --configure-dotfiles
 - Writes the experiment settings into `~/posthog/.env` in place: `SANDBOX_PROVIDER=MODAL_DOCKER`, the three `SANDBOX_*_URL` tunnel URLs, and the gateway's local AI capture lane. The Modal and GitHub App credentials come from secrets
 - `seed-github-app` creates the GitHub App installation row for team 1 in the box database (needs the stack up and the `GITHUB_APP_*` secrets). Run once per fresh database, so again after `hogli nuke`
 - Writes the Metabase session cookie from the `METABASE_COOKIE_US` secret to `~/.config/posthog/metabase/cookie-us` (mode 600), so `hogli metabase:*` works on the box. Refresh the secret after each local `hogli metabase:login --region us`; a running box needs a restart or an `scp` of the file
+- Installs the same global gitignore as the laptop (`gitignore-global`) to `~/.gitignore` and points `core.excludesFile` at it. The image ships none, so without it `playground/`, `.claude/` and similar show up as untracked and an agent's `git add -A` can stage them. Overwritten on every start, so edit the file in this repo, not on the box
 - Points git at `gh` for HTTPS credentials (`gh auth setup-git`), so pushes do not hang on a username prompt. Needs the `GH_TOKEN` secret
 - Reapplies git commit-signing config from the `POSTHOG_GIT_SIGNING_KEY` secret if the template's boot-time bootstrap raced and left the box unconfigured
 - Merges an `env` block into `~/.claude/settings.json` (`claude-settings.py`) — LLM Analytics session capture and the PostHog MCP exec allow-list

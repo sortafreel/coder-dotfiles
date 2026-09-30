@@ -88,6 +88,12 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# --- Global gitignore ---
+# The image ships none, so a fresh box shows playground/ and agent state as untracked and `git add -A` can stage them.
+cp "$SCRIPT_DIR/gitignore-global" ~/.gitignore \
+  && git config --global core.excludesFile ~/.gitignore \
+  || echo "coder-dotfiles: global gitignore install FAILED"
+
 # --- Claude Code personal config ---
 # Both steps are fast and offline, and must land before the backgrounded plugin
 # install: that also rewrites settings.json, and interleaving two read-modify-write
