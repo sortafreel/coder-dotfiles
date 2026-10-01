@@ -29,16 +29,12 @@ for plugin in posthog slack; do
     || echo "coder-dotfiles: install FAILED for ${plugin} (will retry next start)"
 done
 
-# Project-scoped: the LSP is only useful inside the posthog checkout.
-if [ -d "$HOME/posthog" ]; then
-  case "$installed" in
-    *"typescript-lsp@${MARKETPLACE}"*) ;;
-    *)
-      echo "coder-dotfiles: installing typescript-lsp plugin (project scope)..."
-      (cd "$HOME/posthog" && claude plugin install "typescript-lsp@${MARKETPLACE}" --scope project) \
-        || echo "coder-dotfiles: install FAILED for typescript-lsp (will retry next start)"
-      ;;
-  esac
+# Local scope: the posthog repo disables this plugin in its tracked settings, which outranks user scope.
+# It writes the gitignored .claude/settings.local.json, so the checkout stays clean.
+if [ -d "$HOME/posthog" ] && ! grep -qs "typescript-lsp@${MARKETPLACE}" "$HOME/posthog/.claude/settings.local.json"; then
+  echo "coder-dotfiles: installing typescript-lsp plugin (local scope)..."
+  (cd "$HOME/posthog" && claude plugin install "typescript-lsp@${MARKETPLACE}" --scope local) \
+    || echo "coder-dotfiles: install FAILED for typescript-lsp (will retry next start)"
 fi
 
 echo "coder-dotfiles: claude plugins done"

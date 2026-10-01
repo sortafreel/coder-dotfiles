@@ -27,7 +27,7 @@ hogli devbox:setup --configure-dotfiles
 - Installs the user-level agent skills from `mattpocock/skills` and `find-skills` from `vercel-labs/skills` into `~/.claude/skills` (`install-agent-skills.sh`, backgrounded, non-interactive via `npx skills add -g -a claude-code -s '*' -y`). Skipped once installed; refresh with `npx skills update -g -y`
 - Installs bubblewrap and activates its AppArmor profile (`install-bubblewrap.sh`, backgrounded, needs passwordless sudo). Codex CLI sandboxes commands with it, and the Ubuntu 24.04 image ships neither the package nor an active profile. Skipped once `bwrap --dev-bind / / true` passes
 - Installs Codex CLI, logs it in with the `OPENAI_API_KEY` secret, and registers the PostHog MCP server in `~/.codex/config.toml` (`install-codex.sh`, backgrounded). The config block is written directly because `codex mcp add` starts the browser OAuth flow at once and blocks
-- Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` project-scoped in `~/posthog`
+- Installs the Claude Code marketplace and plugins (`install-claude-plugins.sh`, backgrounded): `posthog` and `slack` user-scoped, `typescript-lsp` local-scoped in `~/posthog`. Local scope writes the gitignored `.claude/settings.local.json`; project scope would edit the tracked `.claude/settings.json` and leave every box with a dirty checkout
 
 Logs: `~/.coder-dotfiles-clone.log`, `~/.coder-dotfiles-plugins.log`, `~/.coder-dotfiles-slim-stack.log`, `~/.coder-dotfiles-phrocs.log`, `~/.coder-dotfiles-skills.log`, `~/.coder-dotfiles-bubblewrap.log`, `~/.coder-dotfiles-codex.log`, and `~/.coder-dotfiles-ngrok.log`.
 
