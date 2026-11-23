@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Codex CLI: install, log in with the OPENAI_API_KEY secret, register the PostHog MCP server.
+# Codex CLI: install, log in with the OPENAI_API_KEY secret, register the PostHog MCP server,
+# turn on cmux notifications.
 # The MCP OAuth login needs a browser and stays manual (see the alex-lebedev-devbox skill).
 set -uo pipefail
 
@@ -29,3 +30,6 @@ if ! codex mcp get posthog >/dev/null 2>&1; then
   printf '\n[mcp_servers.posthog]\nurl = "https://mcp.posthog.com/mcp"\nstartup_timeout_sec = 30\n' >> "$CODEX_DIR/config.toml"
   echo "coder-dotfiles: registered the posthog MCP server in codex (OAuth login is manual)"
 fi
+
+# cmux notifications. Runs last so that only one step at a time writes config.toml.
+python3 "$(dirname "${BASH_SOURCE[0]}")/codex-settings.py" || echo "coder-dotfiles: codex notification settings FAILED"

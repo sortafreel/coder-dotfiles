@@ -95,9 +95,14 @@ cp "$SCRIPT_DIR/gitignore-global" ~/.gitignore \
   || echo "coder-dotfiles: global gitignore install FAILED"
 
 # --- Claude Code personal config ---
-# Both steps are fast and offline, and must land before the backgrounded plugin
+# These steps are fast and offline, and must land before the backgrounded plugin
 # install: that also rewrites settings.json, and interleaving two read-modify-write
 # passes over the same file can drop whichever key was written first.
+# The hook script goes first: the settings merge points Claude Code at it, and Codex uses it too.
+mkdir -p ~/.claude/hooks
+cp -R "$SCRIPT_DIR/claude/hooks/." ~/.claude/hooks/ && chmod +x ~/.claude/hooks/cmux-notify.sh \
+  || echo "coder-dotfiles: claude hooks copy FAILED"
+
 python3 "$SCRIPT_DIR/claude-settings.py" || echo "coder-dotfiles: claude settings merge FAILED"
 
 mkdir -p ~/.claude/skills
